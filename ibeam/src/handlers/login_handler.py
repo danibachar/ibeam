@@ -193,7 +193,7 @@ class LoginHandler():
         _LOGGER.info('Submitting the form')
         submit_form_el = find_element(targets['SUBMIT'], driver)
         submit_form_el.click()
-        _LOGGER.info(f"## DB: Clicked Submit with targets {targets})
+        _LOGGER.info(f"## DB: Clicked Submit with targets {targets}")
 
         trigger, target = wait_and_identify_trigger(
             has_text(targets['SUCCESS']),
