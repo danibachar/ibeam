@@ -64,6 +64,7 @@ def _wait_and_identify_trigger(targets: Targets,
                                *expected_conditions,
                                skip_identify: bool = False,
                                ) -> (WebElement, Target):
+    _LOGGER.info(f'## DB: _wait_and_identify_trigger for targets: {targets}, witbh conditions: {expected_conditions} and timeout {timeout}')
     trigger = WebDriverWait(driver, timeout).until(any_of(*expected_conditions))
 
     if skip_identify:
@@ -192,6 +193,7 @@ class LoginHandler():
         _LOGGER.info('Submitting the form')
         submit_form_el = find_element(targets['SUBMIT'], driver)
         submit_form_el.click()
+        _LOGGER.info(f"## DB: Clicked Submit with targets {targets})
 
         trigger, target = wait_and_identify_trigger(
             has_text(targets['SUCCESS']),
@@ -201,7 +203,7 @@ class LoginHandler():
             is_visible(targets['ERROR']),
             is_clickable(targets['IBKEY_PROMO']),
         )
-
+        _LOGGER.info(f"## DB: Step Loggin waited target: {target}, trigger: {trigger}")
         return trigger, target
 
     def step_select_two_fa(self,
@@ -404,7 +406,7 @@ class LoginHandler():
             driver: webdriver.Chrome
     ):
         trigger, target = self.step_login(targets, wait_and_identify_trigger, driver, self.secrets_handler.account, self.secrets_handler.password, self.secrets_handler.key, self.presubmit_buffer)
-
+        _LOGGER.info('Base login')
         if target == targets['ERROR'] and trigger.text == 'You have selected the Live Account Mode, but the specified user is a Paper Trading user. Please select the correct Login mode.':
             trigger, target = self.step_paper_toggle(driver, targets, wait_and_identify_trigger)
 
