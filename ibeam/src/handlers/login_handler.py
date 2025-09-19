@@ -405,6 +405,7 @@ class LoginHandler():
             wait_and_identify_trigger: callable,
             driver: webdriver.Chrome
     ):
+        _LOGGER.info(f'## DB: Start attempt')
         trigger, target = self.step_login(targets, wait_and_identify_trigger, driver, self.secrets_handler.account, self.secrets_handler.password, self.secrets_handler.key, self.presubmit_buffer)
         _LOGGER.info(f'## DB: Logged in with trigger {trigger} and target {target}')
         if target == targets['ERROR'] and trigger.text == 'You have selected the Live Account Mode, but the specified user is a Paper Trading user. Please select the correct Login mode.':
