@@ -406,30 +406,40 @@ class LoginHandler():
             driver: webdriver.Chrome
     ):
         trigger, target = self.step_login(targets, wait_and_identify_trigger, driver, self.secrets_handler.account, self.secrets_handler.password, self.secrets_handler.key, self.presubmit_buffer)
-        _LOGGER.info('Base login')
+        _LOGGER.info(f'## DB: Logged in with trigger {trigger} and target {target}')
         if target == targets['ERROR'] and trigger.text == 'You have selected the Live Account Mode, but the specified user is a Paper Trading user. Please select the correct Login mode.':
+            _LOGGER.info(f'## DB: Attempt: Error 1')
             trigger, target = self.step_paper_toggle(driver, targets, wait_and_identify_trigger)
 
         if target == targets['TWO_FA_SELECT']:
+            _LOGGER.info(f'## DB: Attempt: TWO_FA_SELECT')
             trigger, target = self.step_select_two_fa(targets, wait_and_identify_trigger, driver, self.two_fa_select_target)
 
         if target == targets['TWO_FA_NOTIFICATION']:
+            _LOGGER.info(f'## DB: Attempt: TWO_FA_NOTIFICATION')
             trigger, target = self.step_two_fa_notification(targets, wait_and_identify_trigger, driver, self.two_fa_handler)
 
         if target == targets['TWO_FA']:
+            _LOGGER.info(f'## DB: Attempt: TWO_FA 1')
             trigger, target = self.step_two_fa(targets, wait_and_identify_trigger, driver, self.two_fa_handler, self.strict_two_fa_code)
 
         if target == targets['IBKEY_PROMO']:
+            _LOGGER.info(f'## DB: Attempt: IBKEY_PROMO')
             trigger, target = self.step_handle_ib_key_promo(driver, targets, wait_and_identify_trigger, trigger)
 
         if target == targets['ERROR']:
+            _LOGGER.info(f'## DB: Attempt: Error 2')
             self.step_error(driver, trigger, self.max_presubmit_buffer, self.max_failed_auth, self.outputs_dir)
 
         elif target == targets['TWO_FA']:
+            _LOGGER.info(f'## DB: Attempt: TWO_FA 2')
             self.step_failed_two_fa(driver)
 
         elif target == targets['SUCCESS']:
+            _LOGGER.info(f'## DB: Attempt: SUCCESS')
             self.step_success()
+
+        _LOGGER.info(f'## DB: Attempt: NOTHING')
 
     def load_page(self, targets:Targets, driver:webdriver.Chrome, base_url: str, route_auth: str):
         driver.get(base_url + route_auth)
